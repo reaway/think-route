@@ -1,0 +1,30 @@
+{
+  "name": "reaway/think-route",
+  "type": "library",
+  "description": "think route",
+  "keywords": [],
+  "homepage": "https://github.com/reaway/think-route",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "reaway",
+      "email": "reaway@foxmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.2.0",
+    "psr/http-message": "^1.0",
+    "reaway/think-facade": "^1.0",
+    "reaway/think-request": "^1.0",
+    "reaway/think-response": "^1.0",
+    "reaway/think-validate": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Think\\Component\\Route\\": "src/"
+    },
+    "files": [
+      "src/helper.php"
+    ]
+  }
+}
