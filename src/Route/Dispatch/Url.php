@@ -13,7 +13,7 @@ declare (strict_types = 1);
 namespace Think\Component\Route\Route\Dispatch;
 
 use think\helper\Str;
-use think\exception\HttpException;
+use Think\Component\Route\Exception\HttpException;
 use Think\Component\Request\Request;
 use Think\Component\Route\Route\Rule;
 

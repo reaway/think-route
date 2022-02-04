@@ -16,9 +16,9 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use think\App;
-use think\exception\ClassNotFoundException;
-use think\exception\HttpException;
 use think\helper\Str;
+use think\exception\ClassNotFoundException;
+use Think\Component\Route\Exception\HttpException;
 use Think\Component\Route\Route\Dispatch;
 
 /**

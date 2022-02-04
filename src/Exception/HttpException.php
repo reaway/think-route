@@ -8,19 +8,35 @@
 // +----------------------------------------------------------------------
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace Think\Component\Route\Exception;
 
-use Think\Component\Route\Exception\HttpException;
+use Exception;
 
 /**
- * 路由未定义异常
+ * HTTP异常
  */
-class RouteNotFoundException extends HttpException
+class HttpException extends \RuntimeException
 {
-    public function __construct()
+    private $statusCode;
+    private $headers;
+
+    public function __construct(int $statusCode, string $message = '', Exception $previous = null, array $headers = [], $code = 0)
     {
-        parent::__construct(404, 'Route Not Found');
+        $this->statusCode = $statusCode;
+        $this->headers    = $headers;
+
+        parent::__construct($message, $code, $previous);
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 }
