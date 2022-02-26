@@ -24,7 +24,10 @@ use Think\Component\Route\Route\RuleGroup;
 use Think\Component\Route\Route\RuleItem;
 use Think\Component\Route\Route\RuleName;
 use Think\Component\Route\Route\Url as UrlBuild;
+use Think\Component\Request\Request;
 use Think\Component\Response\Response;
+use Think\Component\Config\Config;
+use Think\Component\Middleware\Middleware;
 
 /**
  * 路由管理类
@@ -156,24 +159,29 @@ class Route
      */
     protected $removeSlash = false;
 
-    public function __construct(App $app)
+    /**
+     * @var Middleware
+     */
+    private $middleware;
+
+    public function __construct(Middleware $middleware, array $config = [])
     {
-        $this->app      = $app;
+        $this->middleware = $middleware;
         $this->ruleName = new RuleName();
         $this->setDefaultDomain();
 
-        if (is_file($this->app->getRuntimePath() . 'route.php')) {
-            // 读取路由映射文件
-            $this->import(include $this->app->getRuntimePath() . 'route.php');
-        }
+        $this->config = array_merge($this->config, $config);
+    }
 
-        $this->config = array_merge($this->config, $this->app->config->get('route'));
+    public static function __make(Middleware $middleware, Config $config)
+    {
+        return new static($middleware, $config->get('route'));
     }
 
     protected function init()
     {
         if (!empty($this->config['middleware'])) {
-            $this->app->middleware->import($this->config['middleware'], 'route');
+            $this->middleware->import($this->config['middleware'], 'route');
         }
 
         $this->lazy($this->config['url_lazy_route']);
@@ -767,7 +775,7 @@ class Route
 
         $dispatch->init($this->app);
 
-        return $this->app->middleware->pipeline('route')
+        return $this->middleware->pipeline('route')
             ->send($request)
             ->then(function () use ($dispatch) {
                 return $dispatch->run();

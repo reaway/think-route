@@ -17,7 +17,9 @@
     "reaway/think-facade": "^1.0",
     "reaway/think-request": "^1.0",
     "reaway/think-response": "^1.0",
-    "reaway/think-validate": "^1.0"
+    "reaway/think-validate": "^1.0",
+    "reaway/think-config": "^1.0",
+    "reaway/think-middleware": "dev-main"
   },
   "autoload": {
     "psr-4": {

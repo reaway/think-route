@@ -25,9 +25,9 @@ abstract class Dispatch
 {
     /**
      * 应用对象
-     * @var \think\App
+     * @var Container
      */
-    protected $app;
+    protected $container;
 
     /**
      * 请求对象
@@ -53,18 +53,17 @@ abstract class Dispatch
      */
     protected $param;
 
-    public function __construct(Request $request, Rule $rule, $dispatch, array $param = [])
+    public function __construct(Container $container, Request $request, Rule $rule, $dispatch, array $param = [])
     {
+        $this->container = $container;
         $this->request  = $request;
         $this->rule     = $rule;
         $this->dispatch = $dispatch;
         $this->param    = $param;
     }
 
-    public function init(App $app)
+    public function init()
     {
-        $this->app = $app;
-
         // 执行路由后置操作
         $this->doRouteAfter();
     }
@@ -161,7 +160,7 @@ abstract class Dispatch
     {
         foreach ($bindModel as $key => $val) {
             if ($val instanceof \Closure) {
-                $result = $this->app->invokeFunction($val, $matches);
+                $result = $this->container->invokeFunction($val, $matches);
             } else {
                 $fields = explode('&', $key);
 
@@ -191,7 +190,7 @@ abstract class Dispatch
 
             if (!empty($result)) {
                 // 注入容器
-                $this->app->instance(get_class($result), $result);
+                $this->container->instance(get_class($result), $result);
             }
         }
     }
@@ -213,7 +212,7 @@ abstract class Dispatch
             $v->rule($validate);
         } else {
             // 调用验证器
-            $class = false !== strpos($validate, '\\') ? $validate : $this->app->parseClass('validate', $validate);
+            $class = false !== strpos($validate, '\\') ? $validate : $this->container->parseClass('validate', $validate);
 
             $v = new $class();
 
@@ -248,8 +247,8 @@ abstract class Dispatch
 
     public function __wakeup()
     {
-        $this->app     = Container::pull('app');
-        $this->request = $this->app->request;
+        $this->container     = Container::pull('app');
+        $this->request = $this->container->request;
     }
 
     public function __debugInfo()
